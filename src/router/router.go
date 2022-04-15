@@ -7,7 +7,9 @@ import (
 
 func NewRouter() *gin.Engine {
 	rootController := controller.NewRootController()
+	beauticianController := controller.NewBeauticianController()
 	r := gin.Default()
 	r.GET("/", rootController.GreetingHandler)
+	r.GET("/beauticians", beauticianController.IndexHandler)
 	return r
 }
