@@ -6,17 +6,17 @@ import (
 )
 
 func NewDatabaseHandler() *gorm.DB {
-  DBMS     := "mysql"
-  USER     := "root"
-  PASS     := ""
-  PROTOCOL := "tcp(localhost:4306)"
-  DBNAME   := "hs-reservation"
+	DBMS := "mysql"
+	USER := "root"
+	PASS := ""
+	PROTOCOL := "tcp(localhost:4306)"
+	DBNAME := "hs-reservation"
 
-  CONNECT := USER+":"+PASS+"@"+PROTOCOL+"/"+DBNAME
-  db,err := gorm.Open(DBMS, CONNECT)
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
+	db, err := gorm.Open(DBMS, CONNECT)
 
-  if err != nil {
-    panic(err.Error())
-  }
-  return db
+	if err != nil {
+		panic(err.Error())
+	}
+	return db
 }

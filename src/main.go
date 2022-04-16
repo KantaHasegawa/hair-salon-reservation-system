@@ -1,3 +1,5 @@
+//+build wireinject
+
 package main
 
 import (
@@ -8,6 +10,6 @@ import (
 func main() {
 	db := database.NewDatabaseHandler()
 	defer db.Close()
-	r := router.NewRouter(db)
+	r := router.NewRouter()
 	r.Run()
 }

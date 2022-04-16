@@ -7,7 +7,7 @@ import (
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
 )
 
-type BeauticianRepository struct{
+type BeauticianRepository struct {
 	db *gorm.DB
 }
 
