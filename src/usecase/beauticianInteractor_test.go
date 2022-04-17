@@ -24,6 +24,11 @@ func (r *mockBeauticianRepository) Create(name string, sex string, price int) (s
 	return "", nil
 }
 
+func (r *mockBeauticianRepository) Update(id string, name string, sex string, price int) error {
+	return nil
+}
+
+
 func TestGetBeauticians(t *testing.T) {
 	i := NewBeauticianInteractor(&mockBeauticianRepository{})
 	_, err := i.GetBeauticians()
@@ -39,5 +44,11 @@ func TestGetBeautician(t *testing.T) {
 func TestNewBeautician(t *testing.T) {
 	i := NewBeauticianInteractor(&mockBeauticianRepository{})
 	_, err := i.AddBeautician("", "", 0)
+	assert.Nil(t, err)
+}
+
+func TestUpdateBeautician(t *testing.T) {
+	i := NewBeauticianInteractor(&mockBeauticianRepository{})
+	err := i.UpdateBeautician("", "", "", 0)
 	assert.Nil(t, err)
 }

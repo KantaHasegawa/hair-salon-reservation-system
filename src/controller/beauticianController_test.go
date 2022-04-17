@@ -30,6 +30,10 @@ func (i *mockBeauticianInteractor) AddBeautician(name string, sex string, price 
 	return "id", nil
 }
 
+func (i *mockBeauticianInteractor) UpdateBeautician(id string, name string, sex string, price int) error {
+	return nil
+}
+
 func TestIndexHndler(t *testing.T) {
 	expect := "{\"result\":[{\"id\":\"1\",\"name\":\"one\",\"sex\":\"M\",\"price\":1000},{\"id\":\"2\",\"name\":\"two\",\"sex\":\"F\",\"price\":2000}]}"
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
@@ -73,6 +77,23 @@ func TestNewHandler(t *testing.T){
 	)
 	c.Header("Content-Type", "application/json")
 	controller.NewHandler(c)
+	assert.Equal(t, 200, response.Code)
+	assert.Equal(t, expect, response.Body.String())
+}
+
+func TestUpdateHandler(t *testing.T){
+	expect := "{\"message\":\"success\"}"
+	jsonStr := `{"id":"1","name":"test","sex":"M","price":1000}`
+	controller := NewBeauticianController(&mockBeauticianInteractor{})
+	response := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(response)
+	c.Request, _ = http.NewRequest(
+		http.MethodPatch,
+		"/beautician",
+		bytes.NewBuffer([]byte(jsonStr)),
+	)
+	c.Header("Content-Type", "application/json")
+	controller.UpdateHandler(c)
 	assert.Equal(t, 200, response.Code)
 	assert.Equal(t, expect, response.Body.String())
 }
