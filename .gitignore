@@ -21,3 +21,6 @@ tmp
 
 # Go workspace file
 go.work
+
+# logfile
+/log
