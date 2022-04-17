@@ -15,9 +15,19 @@ func TestAll(t *testing.T) {
 	assert.Equal(t, len(beautician.Seed), len(result))
 }
 
-func TestFind(t *testing.T){
+func TestFind(t *testing.T) {
 	r := NewBeauticianRepository(database.NewTestDatabaseHandler())
 	result, _ := r.Find("1")
 	fmt.Print(result)
 	assert.Equal(t, beautician.Seed[0].Name, result.Name)
+}
+
+func TestCreate(t *testing.T) {
+	r := NewBeauticianRepository(database.NewTestDatabaseHandler().Begin())
+	_, err := r.Create("Bob", "M", 10000)
+	assert.Nil(t, err)
+	result, err := r.All()
+	assert.Nil(t, err)
+	assert.Equal(t, len(beautician.Seed) + 1, len(result))
+	r.db.Rollback()
 }

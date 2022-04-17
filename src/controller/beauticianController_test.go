@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -23,6 +24,10 @@ func (i *mockBeauticianInteractor) GetBeauticians() ([]entity.Beautician, error)
 func (i *mockBeauticianInteractor) GetBeautician(id string) (entity.Beautician, error) {
 	result := entity.Beautician{Id: "1", Name: "one", Sex: "M", Price: 1000}
 	return result, nil
+}
+
+func (i *mockBeauticianInteractor) AddBeautician(name string, sex string, price int) (string, error) {
+	return "id", nil
 }
 
 func TestIndexHndler(t *testing.T) {
@@ -51,6 +56,23 @@ func TestShowHandler(t *testing.T){
 		nil,
 	)
 	controller.ShowHandler(c)
+	assert.Equal(t, 200, response.Code)
+	assert.Equal(t, expect, response.Body.String())
+}
+
+func TestNewHandler(t *testing.T){
+	expect := "{\"id\":\"id\"}"
+	jsonStr := `{"name":"test","sex":"M","price":1000}`
+	controller := NewBeauticianController(&mockBeauticianInteractor{})
+	response := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(response)
+	c.Request, _ = http.NewRequest(
+		http.MethodPost,
+		"/beautician",
+		bytes.NewBuffer([]byte(jsonStr)),
+	)
+	c.Header("Content-Type", "application/json")
+	controller.NewHandler(c)
 	assert.Equal(t, 200, response.Code)
 	assert.Equal(t, expect, response.Body.String())
 }
