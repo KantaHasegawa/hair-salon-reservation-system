@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/golang-migrate/migrate/v4 v4.15.1
+	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/stretchr/testify v1.7.0

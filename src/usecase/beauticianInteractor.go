@@ -9,7 +9,7 @@ import (
 type BeauticianRepositoryInterface interface {
 	All() ([]entity.Beautician, error)
 	Find(id string) (entity.Beautician, error)
-	Create(name string, sex string, price int) error
+	Create(name string, sex string, price int) (string, error)
 	Update(id string) error
 	Delete(id string) error
 }
@@ -38,9 +38,9 @@ func (i *BeauticianInteractor) GetBeautician(id string) (entity.Beautician, erro
 	return result, err
 }
 
-func (i *BeauticianInteractor) AddBeautician(name string, sex string, price int) error {
-	err := i.repository.Create(name, sex, price)
-	return err
+func (i *BeauticianInteractor) AddBeautician(name string, sex string, price int) (string, error) {
+	result, err := i.repository.Create(name, sex, price)
+	return result, err
 }
 
 func (i *BeauticianInteractor) UpdateBeautician(id string) error {

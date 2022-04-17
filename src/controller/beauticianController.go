@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"errors"
+
 	"github.com/gin-gonic/gin"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/errorHandler"
@@ -30,4 +32,23 @@ func (controller *BeauticianController) ShowHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(200, gin.H{"result": result})
+}
+
+func (controller *BeauticianController) NewHandler(c *gin.Context) {
+	type Request struct {
+		Name  string `json:"name"`
+		Sex   string `json:"sex"`
+		Price int    `json:"price"`
+	}
+	var body Request
+	if err := c.ShouldBindJSON(&body); err != nil {
+		errorHandler.ControllerError(c, errors.New("bad request"))
+		return
+	}
+	result, err := controller.interactor.AddBeautician(body.Name, body.Sex, body.Price)
+	if err != nil {
+		errorHandler.ControllerError(c, err)
+		return
+	}
+	c.JSON(200, gin.H{"id": result})
 }

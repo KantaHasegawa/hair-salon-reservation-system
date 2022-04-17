@@ -10,7 +10,7 @@ type Beautician struct {
 type BeauticianInteractorInterface interface {
 	GetBeauticians() ([]Beautician, error)
 	GetBeautician(id string) (Beautician, error)
-	AddBeautician(name string, sex string, price int) error
+	AddBeautician(name string, sex string, price int) (string, error)
 	UpdateBeautician(id string) error
 	DeleteBeautician(id string) error
 }

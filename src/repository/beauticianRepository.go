@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
 )
@@ -31,9 +32,16 @@ func (r *BeauticianRepository) Find(id string) (entity.Beautician, error) {
 	}
 	return beautician, nil
 }
-func (r *BeauticianRepository) Create(name string, sex string, price int) error {
-	fmt.Println("all")
-	return nil
+func (r *BeauticianRepository) Create(name string, sex string, price int) (string, error) {
+	id := uuid.NewString()
+	beautician := entity.Beautician{
+		Id: id,
+		Name: name,
+		Sex: sex,
+		Price: price,
+	}
+	if err := r.db.Create(beautician).Error; err != nil {return "", fmt.Errorf("failed to Create: %w", err)}
+	return id, nil
 }
 func (r *BeauticianRepository) Update(id string) error {
 	fmt.Println("all")
