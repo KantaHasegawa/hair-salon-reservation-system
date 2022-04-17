@@ -46,13 +46,25 @@ func TestGetBeautician(t *testing.T) {
 
 func TestNewBeautician(t *testing.T) {
 	i := NewBeauticianInteractor(&mockBeauticianRepository{})
-	_, err := i.AddBeautician("", "", 0)
+	_, err := i.AddBeautician("", "F", 0)
+	assert.EqualError(t, err, "failed to AddBeautician validation(name): bad request")
+	_, err = i.AddBeautician("test", "male", 0)
+	assert.EqualError(t, err, "failed to AddBeautician validation(sex): bad request")
+	_, err = i.AddBeautician("test", "F", -5)
+	assert.EqualError(t, err, "failed to AddBeautician validation(price): bad request")
+	_, err = i.AddBeautician("test", "F", 0)
 	assert.Nil(t, err)
 }
 
 func TestUpdateBeautician(t *testing.T) {
 	i := NewBeauticianInteractor(&mockBeauticianRepository{})
-	err := i.UpdateBeautician("", "", "", 0)
+	err := i.UpdateBeautician("1", "", "F", 0)
+	assert.EqualError(t, err, "failed to AddBeautician validation(name): bad request")
+	err = i.UpdateBeautician("1", "test", "male", 0)
+	assert.EqualError(t, err, "failed to AddBeautician validation(sex): bad request")
+	err = i.UpdateBeautician("1", "test", "F", -5)
+	assert.EqualError(t, err, "failed to AddBeautician validation(price): bad request")
+	err = i.UpdateBeautician("1", "test", "F", 0)
 	assert.Nil(t, err)
 }
 

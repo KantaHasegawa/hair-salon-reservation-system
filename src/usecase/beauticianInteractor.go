@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
@@ -39,7 +40,20 @@ func (i *BeauticianInteractor) GetBeautician(id string) (entity.Beautician, erro
 }
 
 func (i *BeauticianInteractor) AddBeautician(name string, sex string, price int) (string, error) {
+	if name == "" {
+		return "", fmt.Errorf("failed to AddBeautician validation(name): %w", errors.New("bad request"))
+	}
+	if sex == "" || (sex != "M" && sex != "F") {
+		return "", fmt.Errorf("failed to AddBeautician validation(sex): %w", errors.New("bad request"))
+	}
+	if price < 0 {
+		return "", fmt.Errorf("failed to AddBeautician validation(price): %w", errors.New("bad request"))
+	}
+
 	result, err := i.repository.Create(name, sex, price)
+	if err := validateInput(name, sex, price); err != nil {
+		return "", err
+	}
 	if err != nil {
 		return result, fmt.Errorf("failed to BeauticianRepository.Create: %w", err)
 	}
@@ -47,8 +61,11 @@ func (i *BeauticianInteractor) AddBeautician(name string, sex string, price int)
 }
 
 func (i *BeauticianInteractor) UpdateBeautician(id string, name string, sex string, price int) error {
+	if err := validateInput(name, sex, price); err != nil {
+		return err
+	}
 	err := i.repository.Update(id, name, sex, price)
-		if err != nil {
+	if err != nil {
 		return fmt.Errorf("failed to BeauticianRepository.Update: %w", err)
 	}
 	return nil
@@ -60,4 +77,17 @@ func (i *BeauticianInteractor) DeleteBeautician(id string) error {
 		return fmt.Errorf("failed to BeauticianRepository.Delete: %w", err)
 	}
 	return err
+}
+
+func validateInput(name string, sex string, price int) error {
+	if name == "" {
+		return fmt.Errorf("failed to AddBeautician validation(name): %w", errors.New("bad request"))
+	}
+	if sex == "" || (sex != "M" && sex != "F") {
+		return fmt.Errorf("failed to AddBeautician validation(sex): %w", errors.New("bad request"))
+	}
+	if price < 0 {
+		return fmt.Errorf("failed to AddBeautician validation(price): %w", errors.New("bad request"))
+	}
+	return nil
 }
