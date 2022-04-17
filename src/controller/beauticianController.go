@@ -72,3 +72,12 @@ func (controller *BeauticianController) UpdateHandler(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{"message": "success"})
 }
+
+func (controller *BeauticianController) DeleteHandler(c *gin.Context) {
+	err := controller.interactor.DeleteBeautician(c.Param("id"))
+	if err != nil {
+		errorHandler.ControllerError(c, err)
+		return
+	}
+	c.JSON(200, gin.H{"message": "success"})
+}

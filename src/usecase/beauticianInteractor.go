@@ -56,5 +56,8 @@ func (i *BeauticianInteractor) UpdateBeautician(id string, name string, sex stri
 
 func (i *BeauticianInteractor) DeleteBeautician(id string) error {
 	err := i.repository.Delete(id)
+	if err != nil {
+		return fmt.Errorf("failed to BeauticianRepository.Delete: %w", err)
+	}
 	return err
 }

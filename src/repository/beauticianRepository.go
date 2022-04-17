@@ -53,6 +53,7 @@ func (r *BeauticianRepository) Update(id string, name string, sex string, price 
 	return nil
 }
 func (r *BeauticianRepository) Delete(id string) error {
-	fmt.Println("all")
+	beautician := entity.Beautician{}
+	if err := r.db.Delete(&beautician, "id = ?", id).Error; err != nil{return fmt.Errorf("failed to Delete: %w", err)}
 	return nil
 }
