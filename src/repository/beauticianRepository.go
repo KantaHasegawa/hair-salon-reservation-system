@@ -24,8 +24,12 @@ func (r *BeauticianRepository) All() ([]entity.Beautician, error) {
 	return beauticians, nil
 }
 func (r *BeauticianRepository) Find(id string) (entity.Beautician, error) {
-	fmt.Println("all")
-	return entity.Beautician{}, nil
+	beautician := entity.Beautician{}
+	err := r.db.First(&beautician, "id = ?", id).Error
+	if err != nil {
+		return entity.Beautician{}, fmt.Errorf("failed to Find: %w", err)
+	}
+	return beautician, nil
 }
 func (r *BeauticianRepository) Create(name string, sex string, price int) error {
 	fmt.Println("all")

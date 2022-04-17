@@ -20,6 +20,11 @@ func (i *mockBeauticianInteractor) GetBeauticians() ([]entity.Beautician, error)
 	return result, nil
 }
 
+func (i *mockBeauticianInteractor) GetBeautician(id string) (entity.Beautician, error) {
+	result := entity.Beautician{Id: "1", Name: "one", Sex: "M", Price: 1000}
+	return result, nil
+}
+
 func TestIndexHndler(t *testing.T) {
 	expect := "{\"result\":[{\"id\":\"1\",\"name\":\"one\",\"sex\":\"M\",\"price\":1000},{\"id\":\"2\",\"name\":\"two\",\"sex\":\"F\",\"price\":2000}]}"
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
@@ -31,6 +36,21 @@ func TestIndexHndler(t *testing.T) {
 		nil,
 	)
 	controller.IndexHandler(c)
+	assert.Equal(t, 200, response.Code)
+	assert.Equal(t, expect, response.Body.String())
+}
+
+func TestShowHandler(t *testing.T){
+	expect := "{\"result\":{\"id\":\"1\",\"name\":\"one\",\"sex\":\"M\",\"price\":1000}}"
+	controller := NewBeauticianController(&mockBeauticianInteractor{})
+	response := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(response)
+	c.Request, _ = http.NewRequest(
+		http.MethodGet,
+		"/beautician/1",
+		nil,
+	)
+	controller.ShowHandler(c)
 	assert.Equal(t, 200, response.Code)
 	assert.Equal(t, expect, response.Body.String())
 }

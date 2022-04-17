@@ -32,6 +32,9 @@ func (i *BeauticianInteractor) GetBeauticians() ([]entity.Beautician, error) {
 
 func (i *BeauticianInteractor) GetBeautician(id string) (entity.Beautician, error) {
 	result, err := i.repository.Find(id)
+	if err != nil {
+		return result, fmt.Errorf("failed to BeauticianRepository.Find: %w", err)
+	}
 	return result, err
 }
 

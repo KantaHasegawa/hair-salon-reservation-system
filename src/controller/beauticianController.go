@@ -22,3 +22,12 @@ func (controller *BeauticianController) IndexHandler(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{"result": result})
 }
+
+func (controller *BeauticianController) ShowHandler(c *gin.Context) {
+	result, err := controller.interactor.GetBeautician(c.Param("id"))
+	if err != nil {
+		errorHandler.ControllerError(c, err)
+		return
+	}
+	c.JSON(200, gin.H{"result": result})
+}
