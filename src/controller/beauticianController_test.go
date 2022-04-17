@@ -34,6 +34,10 @@ func (i *mockBeauticianInteractor) UpdateBeautician(id string, name string, sex 
 	return nil
 }
 
+func (i *mockBeauticianInteractor) DeleteBeautician(id string) error {
+	return nil
+}
+
 func TestIndexHndler(t *testing.T) {
 	expect := "{\"result\":[{\"id\":\"1\",\"name\":\"one\",\"sex\":\"M\",\"price\":1000},{\"id\":\"2\",\"name\":\"two\",\"sex\":\"F\",\"price\":2000}]}"
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
@@ -94,6 +98,21 @@ func TestUpdateHandler(t *testing.T){
 	)
 	c.Header("Content-Type", "application/json")
 	controller.UpdateHandler(c)
+	assert.Equal(t, 200, response.Code)
+	assert.Equal(t, expect, response.Body.String())
+}
+
+func TestDeleteHandler(t *testing.T){
+	expect := "{\"message\":\"success\"}"
+	controller := NewBeauticianController(&mockBeauticianInteractor{})
+	response := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(response)
+	c.Request, _ = http.NewRequest(
+		http.MethodGet,
+		"/beautician/1",
+		nil,
+	)
+	controller.DeleteHandler(c)
 	assert.Equal(t, 200, response.Code)
 	assert.Equal(t, expect, response.Body.String())
 }

@@ -41,3 +41,13 @@ func TestUpdate(t *testing.T) {
 	assert.Equal(t, "update", result.Name)
 	r.db.Rollback()
 }
+
+func TestDelete(t *testing.T){
+	r := NewBeauticianRepository(database.NewTestDatabaseHandler().Begin())
+	err := r.Delete("3")
+	assert.Nil(t, err)
+	result, err := r.All()
+	assert.Nil(t, err)
+	assert.Equal(t, len(beautician.Seed) - 1, len(result))
+	r.db.Rollback()
+}
