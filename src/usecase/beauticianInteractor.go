@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
+import (
+	"fmt"
+
+	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
+)
 
 type BeauticianRepositoryInterface interface {
 	All() ([]entity.Beautician, error)
@@ -20,7 +24,10 @@ func NewBeauticianInteractor(repository BeauticianRepositoryInterface) *Beautici
 
 func (i *BeauticianInteractor) GetBeauticians() ([]entity.Beautician, error) {
 	result, err := i.repository.All()
-	return result, err
+	if err != nil {
+		return result, fmt.Errorf("failed to BeauticianRepository.All: %w", err)
+	}
+	return result, nil
 }
 
 func (i *BeauticianInteractor) GetBeautician(id string) (entity.Beautician, error) {

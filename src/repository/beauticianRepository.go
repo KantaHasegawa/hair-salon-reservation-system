@@ -16,10 +16,12 @@ func NewBeauticianRepository(db *gorm.DB) *BeauticianRepository {
 }
 
 func (r *BeauticianRepository) All() ([]entity.Beautician, error) {
-	beauticiansRecord := []entity.Beautician{}
-	r.db.Find(&beauticiansRecord)
-	fmt.Println(beauticiansRecord)
-	return nil, nil
+	beauticians := []entity.Beautician{}
+	err := r.db.Find(&beauticians).Error
+	if err != nil {
+		return []entity.Beautician{}, fmt.Errorf("failed to All: %w", err)
+	}
+	return beauticians, nil
 }
 func (r *BeauticianRepository) Find(id string) (entity.Beautician, error) {
 	fmt.Println("all")

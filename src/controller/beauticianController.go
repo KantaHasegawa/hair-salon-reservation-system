@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
+	"github.com/kantahasegawa/hair-salon-reservation-system/src/errorHandler"
 )
 
 type BeauticianController struct {
@@ -14,6 +15,10 @@ func NewBeauticianController(interactor entity.BeauticianInteractorInterface) *B
 }
 
 func (controller *BeauticianController) IndexHandler(c *gin.Context) {
-	controller.interactor.GetBeauticians()
-	c.JSON(200, gin.H{"message": "Beautician Index Handler"})
+	result, err := controller.interactor.GetBeauticians()
+	if err != nil {
+		errorHandler.ControllerError(c, err)
+		return
+	}
+	c.JSON(200, gin.H{"result": result})
 }
