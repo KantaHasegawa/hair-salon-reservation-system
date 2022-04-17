@@ -11,6 +11,6 @@ type BeauticianInteractorInterface interface {
 	GetBeauticians() ([]Beautician, error)
 	GetBeautician(id string) (Beautician, error)
 	AddBeautician(name string, sex string, price int) (string, error)
-	UpdateBeautician(id string) error
+	UpdateBeautician(id string, name string, sex string, price int) error
 	DeleteBeautician(id string) error
 }

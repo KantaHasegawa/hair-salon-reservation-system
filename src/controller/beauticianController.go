@@ -52,3 +52,23 @@ func (controller *BeauticianController) NewHandler(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{"id": result})
 }
+
+func (controller *BeauticianController) UpdateHandler(c *gin.Context) {
+	type Request struct {
+		Id    string `json:"id"`
+		Name  string `json:"name"`
+		Sex   string `json:"sex"`
+		Price int    `json:"price"`
+	}
+	var body Request
+	if err := c.ShouldBindJSON(&body); err != nil {
+		errorHandler.ControllerError(c, errors.New("bad request"))
+		return
+	}
+	err := controller.interactor.UpdateBeautician(body.Id, body.Name, body.Sex, body.Price)
+	if err != nil {
+		errorHandler.ControllerError(c, err)
+		return
+	}
+	c.JSON(200, gin.H{"message": "success"})
+}

@@ -10,7 +10,7 @@ type BeauticianRepositoryInterface interface {
 	All() ([]entity.Beautician, error)
 	Find(id string) (entity.Beautician, error)
 	Create(name string, sex string, price int) (string, error)
-	Update(id string) error
+	Update(id string, name string, sex string, price int) error
 	Delete(id string) error
 }
 
@@ -40,12 +40,18 @@ func (i *BeauticianInteractor) GetBeautician(id string) (entity.Beautician, erro
 
 func (i *BeauticianInteractor) AddBeautician(name string, sex string, price int) (string, error) {
 	result, err := i.repository.Create(name, sex, price)
+	if err != nil {
+		return result, fmt.Errorf("failed to BeauticianRepository.Create: %w", err)
+	}
 	return result, err
 }
 
-func (i *BeauticianInteractor) UpdateBeautician(id string) error {
-	err := i.repository.Update(id)
-	return err
+func (i *BeauticianInteractor) UpdateBeautician(id string, name string, sex string, price int) error {
+	err := i.repository.Update(id, name, sex, price)
+		if err != nil {
+		return fmt.Errorf("failed to BeauticianRepository.Update: %w", err)
+	}
+	return nil
 }
 
 func (i *BeauticianInteractor) DeleteBeautician(id string) error {

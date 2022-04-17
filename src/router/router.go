@@ -14,5 +14,6 @@ func NewRouter() *gin.Engine {
 	r.GET("/beauticians", beauticianController.IndexHandler)
 	r.GET("/beautician/:id", beauticianController.ShowHandler)
 	r.POST("/beautician", beauticianController.NewHandler)
+	r.PATCH("/beautician", beauticianController.UpdateHandler)
 	return r
 }
