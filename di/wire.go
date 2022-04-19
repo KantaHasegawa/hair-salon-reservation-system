@@ -19,3 +19,11 @@ func InitializeBeauticianController() *controller.BeauticianController {
 	)
 	return &controller.BeauticianController{}
 }
+
+func InitializeMenuController() *controller.MenuController {
+	wire.Build(controller.NewMenuController, usecase.NewMenuInteractor, repository.NewMenuRepository, database.NewDatabaseHandler,
+		wire.Bind(new(usecase.MenuRepositoryInterface), new(*repository.MenuRepository)),
+		wire.Bind(new(entity.MenuInteractorInterface), new(*usecase.MenuInteractor)),
+	)
+	return &controller.MenuController{}
+}

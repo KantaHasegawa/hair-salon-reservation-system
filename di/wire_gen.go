@@ -22,3 +22,11 @@ func InitializeBeauticianController() *controller.BeauticianController {
 	beauticianController := controller.NewBeauticianController(beauticianInteractor)
 	return beauticianController
 }
+
+func InitializeMenuController() *controller.MenuController {
+	db := database.NewDatabaseHandler()
+	menuRepository := repository.NewMenuRepository(db)
+	menuInteractor := usecase.NewMenuInteractor(menuRepository)
+	menuController := controller.NewMenuController(menuInteractor)
+	return menuController
+}
