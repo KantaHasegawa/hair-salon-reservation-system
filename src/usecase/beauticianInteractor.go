@@ -51,7 +51,7 @@ func (i *BeauticianInteractor) AddBeautician(name string, sex string, price int)
 	}
 
 	result, err := i.repository.Create(name, sex, price)
-	if err := validateInput(name, sex, price); err != nil {
+	if err := validateBeauticianInput(name, sex, price); err != nil {
 		return "", err
 	}
 	if err != nil {
@@ -61,7 +61,7 @@ func (i *BeauticianInteractor) AddBeautician(name string, sex string, price int)
 }
 
 func (i *BeauticianInteractor) UpdateBeautician(id string, name string, sex string, price int) error {
-	if err := validateInput(name, sex, price); err != nil {
+	if err := validateBeauticianInput(name, sex, price); err != nil {
 		return err
 	}
 	err := i.repository.Update(id, name, sex, price)
@@ -79,7 +79,7 @@ func (i *BeauticianInteractor) DeleteBeautician(id string) error {
 	return err
 }
 
-func validateInput(name string, sex string, price int) error {
+func validateBeauticianInput(name string, sex string, price int) error {
 	if name == "" {
 		return fmt.Errorf("failed to AddBeautician validation(name): %w", errors.New("bad request"))
 	}

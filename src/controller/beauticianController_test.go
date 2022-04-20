@@ -38,7 +38,7 @@ func (i *mockBeauticianInteractor) DeleteBeautician(id string) error {
 	return nil
 }
 
-func TestIndexHndler(t *testing.T) {
+func TestBeauticianIndexHndler(t *testing.T) {
 	expect := "{\"result\":[{\"id\":\"1\",\"name\":\"one\",\"sex\":\"M\",\"price\":1000},{\"id\":\"2\",\"name\":\"two\",\"sex\":\"F\",\"price\":2000}]}"
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
 	response := httptest.NewRecorder()
@@ -53,7 +53,7 @@ func TestIndexHndler(t *testing.T) {
 	assert.Equal(t, expect, response.Body.String())
 }
 
-func TestShowHandler(t *testing.T){
+func TestBeauticianShowHandler(t *testing.T){
 	expect := "{\"result\":{\"id\":\"1\",\"name\":\"one\",\"sex\":\"M\",\"price\":1000}}"
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
 	response := httptest.NewRecorder()
@@ -68,7 +68,7 @@ func TestShowHandler(t *testing.T){
 	assert.Equal(t, expect, response.Body.String())
 }
 
-func TestNewHandler(t *testing.T){
+func TestBeauticianNewHandler(t *testing.T){
 	expect := "{\"id\":\"id\"}"
 	jsonStr := `{"name":"test","sex":"M","price":1000}`
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
@@ -85,7 +85,7 @@ func TestNewHandler(t *testing.T){
 	assert.Equal(t, expect, response.Body.String())
 }
 
-func TestUpdateHandler(t *testing.T){
+func TestBeauticianUpdateHandler(t *testing.T){
 	expect := "{\"message\":\"success\"}"
 	jsonStr := `{"id":"1","name":"test","sex":"M","price":1000}`
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
@@ -102,7 +102,7 @@ func TestUpdateHandler(t *testing.T){
 	assert.Equal(t, expect, response.Body.String())
 }
 
-func TestDeleteHandler(t *testing.T){
+func TestBeauticianDeleteHandler(t *testing.T){
 	expect := "{\"message\":\"success\"}"
 	controller := NewBeauticianController(&mockBeauticianInteractor{})
 	response := httptest.NewRecorder()

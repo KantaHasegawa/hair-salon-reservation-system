@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
@@ -40,7 +41,7 @@ func (i *MenuInteractor) GetMenu(id string) (entity.Menu, error) {
 
 func (i *MenuInteractor) AddMenu(name string, sex string, price int, time int) (string, error) {
 	result, err := i.repository.Create(name, sex, price, time)
-	if err := validateInput(name, sex, price); err != nil {
+	if err := validateMenuInput(name, sex, price); err != nil {
 		return "", err
 	}
 	if err != nil {
@@ -50,7 +51,7 @@ func (i *MenuInteractor) AddMenu(name string, sex string, price int, time int) (
 }
 
 func (i *MenuInteractor) UpdateMenu(id string, name string, sex string, price int, time int) error {
-	if err := validateInput(name, sex, price); err != nil {
+	if err := validateMenuInput(name, sex, price); err != nil {
 		return err
 	}
 	err := i.repository.Update(id, name, sex, price, time)
@@ -68,15 +69,15 @@ func (i *MenuInteractor) DeleteMenu(id string) error {
 	return err
 }
 
-// func validateInput(name string, sex string, price int) error {
-// 	if name == "" {
-// 		return fmt.Errorf("failed to AddMenu validation(name): %w", errors.New("bad request"))
-// 	}
-// 	if sex == "" || (sex != "M" && sex != "F") {
-// 		return fmt.Errorf("failed to AddMenu validation(sex): %w", errors.New("bad request"))
-// 	}
-// 	if price < 0 {
-// 		return fmt.Errorf("failed to AddMenu validation(price): %w", errors.New("bad request"))
-// 	}
-// 	return nil
-// }
+func validateMenuInput(name string, sex string, price int) error {
+	if name == "" {
+		return fmt.Errorf("failed to AddMenu validation(name): %w", errors.New("bad request"))
+	}
+	if sex == "" || (sex != "M" && sex != "F") {
+		return fmt.Errorf("failed to AddMenu validation(sex): %w", errors.New("bad request"))
+	}
+	if price < 0 {
+		return fmt.Errorf("failed to AddMenu validation(price): %w", errors.New("bad request"))
+	}
+	return nil
+}
