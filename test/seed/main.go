@@ -5,7 +5,9 @@ import (
 
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/database"
 	"github.com/kantahasegawa/hair-salon-reservation-system/test/seed/beautician"
+	"github.com/kantahasegawa/hair-salon-reservation-system/test/seed/customer"
 	"github.com/kantahasegawa/hair-salon-reservation-system/test/seed/menu"
+	"github.com/kantahasegawa/hair-salon-reservation-system/test/seed/reservation"
 )
 
 func main() {
@@ -17,6 +19,8 @@ func main() {
 
 	err = beautician.Factory(db)
 	err = menu.Factory(db)
+	err = customer.Factory(db)
+	err = reservation.Factory(db)
 
 	if err != nil {
 		panic(err.Error())
