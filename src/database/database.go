@@ -11,8 +11,9 @@ func NewDatabaseHandler() *gorm.DB {
 	PASS := ""
 	PROTOCOL := "tcp(localhost:4306)"
 	DBNAME := "hs_reservation"
+	OPTION := "parseTime=true"
 
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?" + OPTION
 	db, err := gorm.Open(DBMS, CONNECT)
 
 	if err != nil {
@@ -27,8 +28,9 @@ func NewTestDatabaseHandler() *gorm.DB {
 	PASS := ""
 	PROTOCOL := "tcp(localhost:4306)"
 	DBNAME := "hs_reservation_test"
+	OPTION := "parseTime=true"
 
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?" + OPTION
 	db, err := gorm.Open(DBMS, CONNECT)
 
 	if err != nil {
