@@ -27,3 +27,11 @@ func InitializeMenuController() *controller.MenuController {
 	)
 	return &controller.MenuController{}
 }
+
+func InitializeReservationController() *controller.ReservationController {
+	wire.Build(controller.NewReservationController, usecase.NewReservationInteractor, repository.NewReservationRepository, database.NewDatabaseHandler,
+		wire.Bind(new(usecase.ReservationRepositoryInterface), new(*repository.ReservationRepository)),
+		wire.Bind(new(entity.ReservationInteractorInterface), new(*usecase.ReservationInteractor)),
+	)
+	return &controller.ReservationController{}
+}

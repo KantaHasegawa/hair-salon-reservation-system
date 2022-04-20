@@ -10,6 +10,7 @@ func NewRouter() *gin.Engine {
 	rootController := controller.NewRootController()
 	beauticianController := di.InitializeBeauticianController()
 	menuController := di.InitializeMenuController()
+	reservationController := di.InitializeReservationController()
 	r := gin.Default()
 	r.GET("/", rootController.GreetingHandler)
 	r.GET("/beauticians", beauticianController.IndexHandler)
@@ -22,5 +23,9 @@ func NewRouter() *gin.Engine {
 	r.POST("/menu", menuController.NewHandler)
 	r.PATCH("/menu", menuController.UpdateHandler)
 	r.DELETE("/menu/:id", menuController.DeleteHandler)
+	r.GET("/reservations", reservationController.IndexHandler)
+	r.GET("/reservation/:id", reservationController.ShowHandler)
+	r.POST("/reservation", reservationController.NewHandler)
+	r.DELETE("/reservation/:id", reservationController.DeleteHandler)
 	return r
 }

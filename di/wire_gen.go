@@ -30,3 +30,11 @@ func InitializeMenuController() *controller.MenuController {
 	menuController := controller.NewMenuController(menuInteractor)
 	return menuController
 }
+
+func InitializeReservationController() *controller.ReservationController {
+	db := database.NewDatabaseHandler()
+	reservationRepository := repository.NewReservationRepository(db)
+	reservationInteractor := usecase.NewReservationInteractor(reservationRepository)
+	reservationController := controller.NewReservationController(reservationInteractor)
+	return reservationController
+}
