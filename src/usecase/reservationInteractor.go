@@ -16,14 +16,23 @@ type ReservationRepositoryInterface interface {
 	Delete(id string) error
 }
 
+type CustomerRepositoryInterface interface {
+	All() ([]entity.Customer, error)
+	Find(id string) (entity.Customer, error)
+	Create(name string, sex string) (string, error)
+	Update(id string, name string, sex string) error
+	Delete(id string) error
+}
+
 type ReservationInteractor struct {
 	reservationRepository ReservationRepositoryInterface
 	beauticianRepository  BeauticianRepositoryInterface
 	menuRepository        MenuRepositoryInterface
+	customer              CustomerRepositoryInterface
 }
 
-func NewReservationInteractor(reservationRepository ReservationRepositoryInterface, beauticianRepository BeauticianRepositoryInterface, menuRepository MenuRepositoryInterface) *ReservationInteractor {
-	return &ReservationInteractor{reservationRepository, beauticianRepository, menuRepository}
+func NewReservationInteractor(reservationRepository ReservationRepositoryInterface, beauticianRepository BeauticianRepositoryInterface, menuRepository MenuRepositoryInterface, customerRepository CustomerRepositoryInterface) *ReservationInteractor {
+	return &ReservationInteractor{reservationRepository, beauticianRepository, menuRepository, customerRepository}
 }
 
 func (i *ReservationInteractor) GetReservations() ([]entity.Reservation, error) {

@@ -36,7 +36,8 @@ func InitializeReservationController() *controller.ReservationController {
 	reservationRepository := repository.NewReservationRepository(db)
 	beauticianRepository := repository.NewBeauticianRepository(db)
 	menuRepository := repository.NewMenuRepository(db)
-	reservationInteractor := usecase.NewReservationInteractor(reservationRepository, beauticianRepository, menuRepository)
+	customerRepository := repository.NewCustomerRepository(db)
+	reservationInteractor := usecase.NewReservationInteractor(reservationRepository, beauticianRepository, menuRepository, customerRepository)
 	reservationController := controller.NewReservationController(reservationInteractor)
 	return reservationController
 }

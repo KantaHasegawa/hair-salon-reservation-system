@@ -9,6 +9,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type mockCustomerRepository struct {
+	repository.CustomerRepository
+}
+
+func (r *mockCustomerRepository) Find(id string)(entity.Customer, error){
+	return entity.Customer{}, nil
+}
+
 type mockReservationRepository struct {
 	repository.ReservationRepository
 }
@@ -21,7 +29,7 @@ func (r *mockReservationRepository) Find(id string) (entity.Reservation, error) 
 	return entity.Reservation{}, nil
 }
 
-func (r *mockReservationRepository) FindByBeauticianAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error){
+func (r *mockReservationRepository) FindByBeauticianAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error) {
 	return []entity.Reservation{}, nil
 }
 
@@ -37,25 +45,25 @@ var loc, _ = time.LoadLocation("Asia/Tokyo")
 var startTime = time.Date(2000, 1, 1, 0, 0, 0, 0, loc)
 
 func TestGetReservations(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{}, &mockCustomerRepository{})
 	_, err := i.GetReservations()
 	assert.Nil(t, err)
 }
 
 func TestGetReservation(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{}, &mockCustomerRepository{})
 	_, err := i.GetReservation("1")
 	assert.Nil(t, err)
 }
 
 func TestNewReservation(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{}, &mockCustomerRepository{})
 	_, err := i.AddReservation("1", "1", "1", startTime)
 	assert.Nil(t, err)
 }
 
 func TestDeleteReservation(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{}, &mockCustomerRepository{})
 	err := i.DeleteReservation("")
 	assert.Nil(t, err)
 }
