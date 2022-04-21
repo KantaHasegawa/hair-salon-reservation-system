@@ -38,3 +38,21 @@ func InitializeReservationController() *controller.ReservationController {
 	reservationController := controller.NewReservationController(reservationInteractor)
 	return reservationController
 }
+
+func InitializeBeauticianRepository() *repository.BeauticianRepository {
+	db := database.NewDatabaseHandler()
+	beauticianRepository := repository.NewBeauticianRepository(db)
+	return beauticianRepository
+}
+
+func InitializeMenuRepository() *repository.MenuRepository {
+	db := database.NewDatabaseHandler()
+	menuRepository := repository.NewMenuRepository(db)
+	return menuRepository
+}
+
+func InitializeReservationRepository() *repository.ReservationRepository {
+	db := database.NewDatabaseHandler()
+	reservationRepository := repository.NewReservationRepository(db)
+	return reservationRepository
+}

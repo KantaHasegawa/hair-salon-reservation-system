@@ -35,3 +35,18 @@ func InitializeReservationController() *controller.ReservationController {
 	)
 	return &controller.ReservationController{}
 }
+
+func InitializeBeauticianRepository() *repository.BeauticianRepository {
+	wire.Build(repository.NewBeauticianRepository, database.NewDatabaseHandler)
+	return &repository.BeauticianRepository{}
+}
+
+func InitializeMenuRepository() *repository.MenuRepository {
+	wire.Build(repository.NewMenuRepository, database.NewDatabaseHandler)
+	return &repository.MenuRepository{}
+}
+
+func InitializeReservationRepository() *repository.ReservationRepository {
+	wire.Build(repository.NewReservationRepository, database.NewDatabaseHandler)
+	return &repository.ReservationRepository{}
+}
