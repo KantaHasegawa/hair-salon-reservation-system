@@ -15,15 +15,17 @@ type ReservationRepositoryInterface interface {
 }
 
 type ReservationInteractor struct {
-	repository ReservationRepositoryInterface
+	reservationRepository ReservationRepositoryInterface
+	beauticianRepository BeauticianRepositoryInterface
+	menuRepository MenuRepositoryInterface
 }
 
-func NewReservationInteractor(repository ReservationRepositoryInterface) *ReservationInteractor {
-	return &ReservationInteractor{repository}
+func NewReservationInteractor(reservationRepository ReservationRepositoryInterface, beauticianRepository BeauticianRepositoryInterface, menuRepository MenuRepositoryInterface) *ReservationInteractor {
+	return &ReservationInteractor{reservationRepository, beauticianRepository, menuRepository}
 }
 
 func (i *ReservationInteractor) GetReservations() ([]entity.Reservation, error) {
-	result, err := i.repository.All()
+	result, err := i.reservationRepository.All()
 	if err != nil {
 		return result, fmt.Errorf("failed to ReservationRepository.All: %w", err)
 	}
@@ -31,7 +33,7 @@ func (i *ReservationInteractor) GetReservations() ([]entity.Reservation, error) 
 }
 
 func (i *ReservationInteractor) GetReservation(id string) (entity.Reservation, error) {
-	result, err := i.repository.Find(id)
+	result, err := i.reservationRepository.Find(id)
 	if err != nil {
 		return result, fmt.Errorf("failed to ReservationRepository.Find: %w", err)
 	}
@@ -43,7 +45,7 @@ func (i *ReservationInteractor) AddReservation(customerId string, beauticianId s
 	endTime := time.Now()
 	price := 5000
 
-	result, err := i.repository.Create(customerId, beauticianId, menuId, startTime, endTime, price)
+	result, err := i.reservationRepository.Create(customerId, beauticianId, menuId, startTime, endTime, price)
 	if err := validateReservationInput(customerId, beauticianId, menuId, startTime); err != nil {
 		return "", err
 	}
@@ -54,7 +56,7 @@ func (i *ReservationInteractor) AddReservation(customerId string, beauticianId s
 }
 
 func (i *ReservationInteractor) DeleteReservation(id string) error {
-	err := i.repository.Delete(id)
+	err := i.reservationRepository.Delete(id)
 	if err != nil {
 		return fmt.Errorf("failed to ReservationRepository.Delete: %w", err)
 	}

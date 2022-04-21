@@ -33,25 +33,25 @@ var loc, _ = time.LoadLocation("Asia/Tokyo")
 var startTime = time.Date(2000, 1, 1, 0, 0, 0, 0, loc)
 
 func TestGetReservations(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
 	_, err := i.GetReservations()
 	assert.Nil(t, err)
 }
 
 func TestGetReservation(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
 	_, err := i.GetReservation("1")
 	assert.Nil(t, err)
 }
 
 func TestNewReservation(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
 	_, err := i.AddReservation("1", "1", "1", startTime)
 	assert.Nil(t, err)
 }
 
 func TestDeleteReservation(t *testing.T) {
-	i := NewReservationInteractor(&mockReservationRepository{})
+	i := NewReservationInteractor(&mockReservationRepository{}, &mockBeauticianRepository{}, &mockMenuRepository{})
 	err := i.DeleteReservation("")
 	assert.Nil(t, err)
 }
