@@ -42,8 +42,17 @@ func (i *ReservationInteractor) GetReservation(id string) (entity.Reservation, e
 
 func (i *ReservationInteractor) AddReservation(customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
 
-	endTime := time.Now()
-	price := 5000
+	beautician, err := i.beauticianRepository.Find(beauticianId)
+	if err != nil {
+		return "", fmt.Errorf("failed to BeauticianRepository.Find: %w", err)
+	}
+	menu, err := i.menuRepository.Find(menuId)
+	if err != nil {
+		return "", fmt.Errorf("failed to MenuRepository.Find: %w", err)
+	}
+
+	price := beautician.Price + menu.Price
+	endTime := startTime.Add(time.Duration(menu.Time) * time.Minute)
 
 	result, err := i.reservationRepository.Create(customerId, beauticianId, menuId, startTime, endTime, price)
 	if err := validateReservationInput(customerId, beauticianId, menuId, startTime); err != nil {
