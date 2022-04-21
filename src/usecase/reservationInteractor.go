@@ -12,6 +12,7 @@ type ReservationRepositoryInterface interface {
 	All() ([]entity.Reservation, error)
 	Find(id string) (entity.Reservation, error)
 	FindByBeauticianAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error)
+	FindByCustomerAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error)
 	Create(customerId string, beauticianId string, menuId string, startTime time.Time, endTime time.Time, price int) (string, error)
 	Delete(id string) error
 }
@@ -52,7 +53,10 @@ func (i *ReservationInteractor) GetReservation(id string) (entity.Reservation, e
 }
 
 func (i *ReservationInteractor) AddReservation(customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
-
+	_, err := i.beauticianRepository.Find(customerId)
+	if err != nil {
+		return "", fmt.Errorf("failed to CustomerRepository.Find: %w", err)
+	}
 	beautician, err := i.beauticianRepository.Find(beauticianId)
 	if err != nil {
 		return "", fmt.Errorf("failed to BeauticianRepository.Find: %w", err)
@@ -65,11 +69,19 @@ func (i *ReservationInteractor) AddReservation(customerId string, beauticianId s
 	price := beautician.Price + menu.Price
 	endTime := startTime.Add(time.Duration(menu.Time) * time.Minute)
 
-	deplicateBeauticianReservation, err := i.reservationRepository.FindByBeauticianAndTime(customerId, startTime, endTime)
+	deplicateBeauticianReservation, err := i.reservationRepository.FindByBeauticianAndTime(beauticianId, startTime, endTime)
 	if err != nil {
 		return "", fmt.Errorf("failed to ReservationRepository.FindByBeauticianAndTime: %w", err)
 	}
 	if len(deplicateBeauticianReservation) != 0 {
+		return "", fmt.Errorf("failed to AddReservation validation(time deplicate): %w", errors.New("bad request"))
+	}
+
+	deplicateCustomerReservation, err := i.reservationRepository.FindByCustomerAndTime(customerId, startTime, endTime)
+	if err != nil {
+		return "", fmt.Errorf("failed to ReservationRepository.FindByCustomerAndTime: %w", err)
+	}
+	if len(deplicateCustomerReservation) != 0 {
 		return "", fmt.Errorf("failed to AddReservation validation(time deplicate): %w", errors.New("bad request"))
 	}
 
