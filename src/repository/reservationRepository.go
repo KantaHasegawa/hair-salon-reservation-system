@@ -33,6 +33,15 @@ func (r *ReservationRepository) Find(id string) (entity.Reservation, error) {
 	}
 	return Reservation, nil
 }
+func (r *ReservationRepository) FindByBeauticianAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error) {
+	Reservations := []entity.Reservation{}
+	err := r.db.Find(&Reservations, "customer_id = ? AND ? < end_time and ? > start_time ", customerId, startTime, endTime).Error
+	if err != nil {
+		return []entity.Reservation{}, fmt.Errorf("failed to All: %w", err)
+	}
+	return Reservations, nil
+}
+
 func (r *ReservationRepository) Create(customerId string, beauticianId string, menuId string, startTime time.Time, endTime time.Time, price int) (string, error) {
 	id := uuid.NewString()
 	Reservation := entity.Reservation{

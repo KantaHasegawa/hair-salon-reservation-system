@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -10,14 +11,15 @@ import (
 type ReservationRepositoryInterface interface {
 	All() ([]entity.Reservation, error)
 	Find(id string) (entity.Reservation, error)
+	FindByBeauticianAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error)
 	Create(customerId string, beauticianId string, menuId string, startTime time.Time, endTime time.Time, price int) (string, error)
 	Delete(id string) error
 }
 
 type ReservationInteractor struct {
 	reservationRepository ReservationRepositoryInterface
-	beauticianRepository BeauticianRepositoryInterface
-	menuRepository MenuRepositoryInterface
+	beauticianRepository  BeauticianRepositoryInterface
+	menuRepository        MenuRepositoryInterface
 }
 
 func NewReservationInteractor(reservationRepository ReservationRepositoryInterface, beauticianRepository BeauticianRepositoryInterface, menuRepository MenuRepositoryInterface) *ReservationInteractor {
@@ -53,6 +55,14 @@ func (i *ReservationInteractor) AddReservation(customerId string, beauticianId s
 
 	price := beautician.Price + menu.Price
 	endTime := startTime.Add(time.Duration(menu.Time) * time.Minute)
+
+	deplicateBeauticianReservation, err := i.reservationRepository.FindByBeauticianAndTime(customerId, startTime, endTime)
+	if err != nil {
+		return "", fmt.Errorf("failed to ReservationRepository.FindByBeauticianAndTime: %w", err)
+	}
+	if len(deplicateBeauticianReservation) != 0 {
+		return "", fmt.Errorf("failed to AddReservation validation(time deplicate): %w", errors.New("bad request"))
+	}
 
 	result, err := i.reservationRepository.Create(customerId, beauticianId, menuId, startTime, endTime, price)
 	if err := validateReservationInput(customerId, beauticianId, menuId, startTime); err != nil {

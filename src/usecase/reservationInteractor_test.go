@@ -21,6 +21,10 @@ func (r *mockReservationRepository) Find(id string) (entity.Reservation, error) 
 	return entity.Reservation{}, nil
 }
 
+func (r *mockReservationRepository) FindByBeauticianAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error){
+	return []entity.Reservation{}, nil
+}
+
 func (r *mockReservationRepository) Create(customerId string, beauticianId string, menuId string, startTime time.Time, endTime time.Time, price int) (string, error) {
 	return "", nil
 }
