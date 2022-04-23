@@ -29,7 +29,7 @@ type ReservationInteractor struct {
 	reservationRepository ReservationRepositoryInterface
 	beauticianRepository  BeauticianRepositoryInterface
 	menuRepository        MenuRepositoryInterface
-	customer              CustomerRepositoryInterface
+	customerRepository              CustomerRepositoryInterface
 }
 
 func NewReservationInteractor(reservationRepository ReservationRepositoryInterface, beauticianRepository BeauticianRepositoryInterface, menuRepository MenuRepositoryInterface, customerRepository CustomerRepositoryInterface) *ReservationInteractor {
@@ -53,7 +53,7 @@ func (i *ReservationInteractor) GetReservation(id string) (entity.Reservation, e
 }
 
 func (i *ReservationInteractor) AddReservation(customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
-	_, err := i.beauticianRepository.Find(customerId)
+	_, err := i.customerRepository.Find(customerId)
 	if err != nil {
 		return "", fmt.Errorf("failed to CustomerRepository.Find: %w", err)
 	}
