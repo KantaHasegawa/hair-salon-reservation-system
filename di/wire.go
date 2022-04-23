@@ -5,6 +5,7 @@ package di
 
 import (
 	"github.com/google/wire"
+	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/controller"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/database"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
@@ -12,24 +13,24 @@ import (
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/usecase"
 )
 
-func InitializeBeauticianController() *controller.BeauticianController {
-	wire.Build(controller.NewBeauticianController, usecase.NewBeauticianInteractor, repository.NewBeauticianRepository, database.NewDatabaseHandler,
+func InitializeBeauticianController(db *gorm.DB) *controller.BeauticianController {
+	wire.Build(controller.NewBeauticianController, usecase.NewBeauticianInteractor, repository.NewBeauticianRepository,
 		wire.Bind(new(usecase.BeauticianRepositoryInterface), new(*repository.BeauticianRepository)),
 		wire.Bind(new(entity.BeauticianInteractorInterface), new(*usecase.BeauticianInteractor)),
 	)
 	return &controller.BeauticianController{}
 }
 
-func InitializeMenuController() *controller.MenuController {
-	wire.Build(controller.NewMenuController, usecase.NewMenuInteractor, repository.NewMenuRepository, database.NewDatabaseHandler,
+func InitializeMenuController(db *gorm.DB) *controller.MenuController {
+	wire.Build(controller.NewMenuController, usecase.NewMenuInteractor, repository.NewMenuRepository,
 		wire.Bind(new(usecase.MenuRepositoryInterface), new(*repository.MenuRepository)),
 		wire.Bind(new(entity.MenuInteractorInterface), new(*usecase.MenuInteractor)),
 	)
 	return &controller.MenuController{}
 }
 
-func InitializeReservationController() *controller.ReservationController {
-	wire.Build(controller.NewReservationController, usecase.NewReservationInteractor, repository.NewReservationRepository, repository.NewMenuRepository, repository.NewBeauticianRepository, repository.NewCustomerRepository, database.NewDatabaseHandler,
+func InitializeReservationController(db *gorm.DB) *controller.ReservationController {
+	wire.Build(controller.NewReservationController, usecase.NewReservationInteractor, repository.NewReservationRepository, repository.NewMenuRepository, repository.NewBeauticianRepository, repository.NewCustomerRepository,
 		wire.Bind(new(usecase.ReservationRepositoryInterface), new(*repository.ReservationRepository)),
 		wire.Bind(new(usecase.MenuRepositoryInterface), new(*repository.MenuRepository)),
 		wire.Bind(new(usecase.BeauticianRepositoryInterface), new(*repository.BeauticianRepository)),

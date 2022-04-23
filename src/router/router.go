@@ -2,15 +2,16 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/di"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/controller"
 )
 
-func NewRouter() *gin.Engine {
+func NewRouter(db *gorm.DB) *gin.Engine {
 	rootController := controller.NewRootController()
-	beauticianController := di.InitializeBeauticianController()
-	menuController := di.InitializeMenuController()
-	reservationController := di.InitializeReservationController()
+	beauticianController := di.InitializeBeauticianController(db)
+	menuController := di.InitializeMenuController(db)
+	reservationController := di.InitializeReservationController(db)
 	r := gin.Default()
 	r.GET("/", rootController.GreetingHandler)
 	r.GET("/beauticians", beauticianController.IndexHandler)

@@ -7,6 +7,7 @@
 package di
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/controller"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/database"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/repository"
@@ -15,24 +16,21 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeBeauticianController() *controller.BeauticianController {
-	db := database.NewDatabaseHandler()
+func InitializeBeauticianController(db *gorm.DB) *controller.BeauticianController {
 	beauticianRepository := repository.NewBeauticianRepository(db)
 	beauticianInteractor := usecase.NewBeauticianInteractor(beauticianRepository)
 	beauticianController := controller.NewBeauticianController(beauticianInteractor)
 	return beauticianController
 }
 
-func InitializeMenuController() *controller.MenuController {
-	db := database.NewDatabaseHandler()
+func InitializeMenuController(db *gorm.DB) *controller.MenuController {
 	menuRepository := repository.NewMenuRepository(db)
 	menuInteractor := usecase.NewMenuInteractor(menuRepository)
 	menuController := controller.NewMenuController(menuInteractor)
 	return menuController
 }
 
-func InitializeReservationController() *controller.ReservationController {
-	db := database.NewDatabaseHandler()
+func InitializeReservationController(db *gorm.DB) *controller.ReservationController {
 	reservationRepository := repository.NewReservationRepository(db)
 	beauticianRepository := repository.NewBeauticianRepository(db)
 	menuRepository := repository.NewMenuRepository(db)

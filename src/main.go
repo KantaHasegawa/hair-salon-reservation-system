@@ -13,6 +13,6 @@ func main() {
 	utils.LoggingSetting("log/error.log")
 	db := database.NewDatabaseHandler()
 	defer db.Close()
-	r := router.NewRouter()
+	r := router.NewRouter(db)
 	r.Run()
 }
