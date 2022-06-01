@@ -100,7 +100,11 @@ func (i *ReservationInteractor) AddReservation(ctx context.Context, customerId s
 		return result, err
 	})
 
-	return result.(string), err
+	s, ok := result.(string)
+	if !ok {
+		return "", err
+	}
+	return s, err
 }
 
 func (i *ReservationInteractor) DeleteReservation(ctx context.Context, id string) error {
