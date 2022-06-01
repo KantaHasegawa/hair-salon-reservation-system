@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/kantahasegawa/hair-salon-reservation-system/src/database"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
 )
 
@@ -26,14 +27,15 @@ type CustomerRepositoryInterface interface {
 }
 
 type ReservationInteractor struct {
+	tx                    database.Transaction
 	reservationRepository ReservationRepositoryInterface
 	beauticianRepository  BeauticianRepositoryInterface
 	menuRepository        MenuRepositoryInterface
-	customerRepository              CustomerRepositoryInterface
+	customerRepository    CustomerRepositoryInterface
 }
 
-func NewReservationInteractor(reservationRepository ReservationRepositoryInterface, beauticianRepository BeauticianRepositoryInterface, menuRepository MenuRepositoryInterface, customerRepository CustomerRepositoryInterface) *ReservationInteractor {
-	return &ReservationInteractor{reservationRepository, beauticianRepository, menuRepository, customerRepository}
+func NewReservationInteractor(tx database.Transaction, reservationRepository ReservationRepositoryInterface, beauticianRepository BeauticianRepositoryInterface, menuRepository MenuRepositoryInterface, customerRepository CustomerRepositoryInterface) *ReservationInteractor {
+	return &ReservationInteractor{tx, reservationRepository, beauticianRepository, menuRepository, customerRepository}
 }
 
 func (i *ReservationInteractor) GetReservations() ([]entity.Reservation, error) {
