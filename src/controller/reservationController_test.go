@@ -2,6 +2,7 @@ package controller
 
 import (
 	"bytes"
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -21,22 +22,22 @@ var loc, _ = time.LoadLocation("Asia/Tokyo")
 var startTime = time.Date(2000, 1, 1, 0, 0, 0, 0, loc)
 var endTime = startTime.Add(1 * time.Hour)
 
-func (i *mockReservationInteractor) GetReservations() ([]entity.Reservation, error) {
+func (i *mockReservationInteractor) GetReservations(ctx context.Context) ([]entity.Reservation, error) {
 	result := []entity.Reservation{{Id: "1", CustomerId: "1", BeauticianId: "1", MenuId: "1", StartTime: startTime, EndTime: endTime, Price: 5000},
 		{Id: "2", CustomerId: "2", BeauticianId: "2", MenuId: "2", StartTime: startTime, EndTime: endTime, Price: 5000}}
 	return result, nil
 }
 
-func (i *mockReservationInteractor) GetReservation(id string) (entity.Reservation, error) {
+func (i *mockReservationInteractor) GetReservation(ctx context.Context, id string) (entity.Reservation, error) {
 	result := entity.Reservation{Id: "1", CustomerId: "1", BeauticianId: "1", MenuId: "1", StartTime: startTime, EndTime: endTime, Price: 5000}
 	return result, nil
 }
 
-func (i *mockReservationInteractor) AddReservation(customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
+func (i *mockReservationInteractor) AddReservation(ctx context.Context, customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
 	return "id", nil
 }
 
-func (i *mockReservationInteractor) DeleteReservation(id string) error {
+func (i *mockReservationInteractor) DeleteReservation(ctx context.Context, id string) error {
 	return nil
 }
 
