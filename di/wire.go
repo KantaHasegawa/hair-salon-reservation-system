@@ -5,12 +5,12 @@ package di
 
 import (
 	"github.com/google/wire"
-	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/controller"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/database"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/repository"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/usecase"
+	"gorm.io/gorm"
 )
 
 func InitializeBeauticianController(db *gorm.DB) *controller.BeauticianController {

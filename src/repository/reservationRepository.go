@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
+	"gorm.io/gorm"
 )
 
 type ReservationRepository struct {

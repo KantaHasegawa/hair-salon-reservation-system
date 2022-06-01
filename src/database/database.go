@@ -1,20 +1,19 @@
 package database
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func NewDatabaseHandler() *gorm.DB {
-	DBMS := "mysql"
 	USER := "root"
 	PASS := ""
 	PROTOCOL := "tcp(localhost:4306)"
 	DBNAME := "hs_reservation"
 	OPTION := "parseTime=true&loc=Local"
 
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?" + OPTION
-	db, err := gorm.Open(DBMS, CONNECT)
+	dsn := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?" + OPTION
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic(err.Error())
@@ -23,15 +22,14 @@ func NewDatabaseHandler() *gorm.DB {
 }
 
 func NewTestDatabaseHandler() *gorm.DB {
-	DBMS := "mysql"
 	USER := "root"
 	PASS := ""
 	PROTOCOL := "tcp(localhost:4306)"
 	DBNAME := "hs_reservation_test"
 	OPTION := "parseTime=true&loc=Local"
 
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?" + OPTION
-	db, err := gorm.Open(DBMS, CONNECT)
+	dsn := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?" + OPTION
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic(err.Error())

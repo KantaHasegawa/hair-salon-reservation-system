@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
+	"gorm.io/gorm"
 )
 
 type CustomerRepository struct {
@@ -49,10 +49,14 @@ func (r *CustomerRepository) Create(name string, sex string) (string, error) {
 
 func (r *CustomerRepository) Update(id string, name string, sex string) error {
 	Customer := entity.Customer{}
-	if err := r.db.First(&Customer, "id = ?", id).Error; err != nil {return fmt.Errorf("failed to Find: %w", err)}
+	if err := r.db.First(&Customer, "id = ?", id).Error; err != nil {
+		return fmt.Errorf("failed to Find: %w", err)
+	}
 	Customer.Name = name
 	Customer.Sex = sex
-	if err :=	r.db.Save(&Customer).Error; err != nil {return fmt.Errorf("failed to Save: %w", err) }
+	if err := r.db.Save(&Customer).Error; err != nil {
+		return fmt.Errorf("failed to Save: %w", err)
+	}
 	return nil
 }
 

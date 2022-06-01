@@ -2,12 +2,11 @@ package reservation
 
 import (
 	"fmt"
+	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
+
+	"gorm.io/gorm"
 	"log"
 	"time"
-
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
 )
 
 var time1 = time.Now()

@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/kantahasegawa/hair-salon-reservation-system/di"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/controller"
+	"gorm.io/gorm"
 )
 
 func NewRouter(db *gorm.DB) *gin.Engine {

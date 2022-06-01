@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/entity"
+	"gorm.io/gorm"
 )
 
 var Seed = []entity.Customer{
