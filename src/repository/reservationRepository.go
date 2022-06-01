@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/kantahasegawa/hair-salon-reservation-system/src/database"
+	"gorm.io/gorm/clause"
 	"time"
 
 	"github.com/google/uuid"
@@ -50,7 +51,7 @@ func (r *ReservationRepository) FindByBeauticianAndTime(ctx context.Context, bea
 		tx = r.db
 	}
 	Reservations := []entity.Reservation{}
-	err := tx.Find(&Reservations, "beautician_id = ? AND ? < end_time and ? > start_time ", beauticianId, startTime, endTime).Error
+	err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Find(&Reservations, "beautician_id = ? AND ? < end_time and ? > start_time ", beauticianId, startTime, endTime).Error
 	if err != nil {
 		return []entity.Reservation{}, fmt.Errorf("failed to All: %w", err)
 	}
@@ -63,7 +64,7 @@ func (r *ReservationRepository) FindByCustomerAndTime(ctx context.Context, custo
 		tx = r.db
 	}
 	Reservations := []entity.Reservation{}
-	err := tx.Find(&Reservations, "customer_id = ? AND ? < end_time and ? > start_time ", customerId, startTime, endTime).Error
+	err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Find(&Reservations, "customer_id = ? AND ? < end_time and ? > start_time ", customerId, startTime, endTime).Error
 	if err != nil {
 		return []entity.Reservation{}, fmt.Errorf("failed to All: %w", err)
 	}
