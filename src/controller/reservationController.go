@@ -18,7 +18,7 @@ func NewReservationController(interactor entity.ReservationInteractorInterface) 
 }
 
 func (controller *ReservationController) IndexHandler(c *gin.Context) {
-	result, err := controller.interactor.GetReservations()
+	result, err := controller.interactor.GetReservations(c)
 	if err != nil {
 		errorHandler.ControllerError(c, err)
 		return
@@ -27,7 +27,7 @@ func (controller *ReservationController) IndexHandler(c *gin.Context) {
 }
 
 func (controller *ReservationController) ShowHandler(c *gin.Context) {
-	result, err := controller.interactor.GetReservation(c.Param("id"))
+	result, err := controller.interactor.GetReservation(c, c.Param("id"))
 	if err != nil {
 		errorHandler.ControllerError(c, err)
 		return
@@ -47,7 +47,7 @@ func (controller *ReservationController) NewHandler(c *gin.Context) {
 		errorHandler.ControllerError(c, errors.New("bad request"))
 		return
 	}
-	result, err := controller.interactor.AddReservation(body.CustomerId, body.BeauticianId, body.MenuId, body.StartTime)
+	result, err := controller.interactor.AddReservation(c, body.CustomerId, body.BeauticianId, body.MenuId, body.StartTime)
 	if err != nil {
 		errorHandler.ControllerError(c, err)
 		return
@@ -56,7 +56,7 @@ func (controller *ReservationController) NewHandler(c *gin.Context) {
 }
 
 func (controller *ReservationController) DeleteHandler(c *gin.Context) {
-	err := controller.interactor.DeleteReservation(c.Param("id"))
+	err := controller.interactor.DeleteReservation(c, c.Param("id"))
 	if err != nil {
 		errorHandler.ControllerError(c, err)
 		return

@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
@@ -10,12 +11,12 @@ import (
 )
 
 type ReservationRepositoryInterface interface {
-	All() ([]entity.Reservation, error)
-	Find(id string) (entity.Reservation, error)
-	FindByBeauticianAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error)
-	FindByCustomerAndTime(customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error)
-	Create(customerId string, beauticianId string, menuId string, startTime time.Time, endTime time.Time, price int) (string, error)
-	Delete(id string) error
+	All(ctx context.Context) ([]entity.Reservation, error)
+	Find(ctx context.Context, id string) (entity.Reservation, error)
+	FindByBeauticianAndTime(ctx context.Context, customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error)
+	FindByCustomerAndTime(ctx context.Context, customerId string, startTime time.Time, endTime time.Time) ([]entity.Reservation, error)
+	Create(ctx context.Context, customerId string, beauticianId string, menuId string, startTime time.Time, endTime time.Time, price int) (string, error)
+	Delete(ctx context.Context, id string) error
 }
 
 type CustomerRepositoryInterface interface {
@@ -38,67 +39,72 @@ func NewReservationInteractor(tx database.Transaction, reservationRepository Res
 	return &ReservationInteractor{tx, reservationRepository, beauticianRepository, menuRepository, customerRepository}
 }
 
-func (i *ReservationInteractor) GetReservations() ([]entity.Reservation, error) {
-	result, err := i.reservationRepository.All()
+func (i *ReservationInteractor) GetReservations(ctx context.Context) ([]entity.Reservation, error) {
+	result, err := i.reservationRepository.All(ctx)
 	if err != nil {
 		return result, fmt.Errorf("failed to ReservationRepository.All: %w", err)
 	}
 	return result, nil
 }
 
-func (i *ReservationInteractor) GetReservation(id string) (entity.Reservation, error) {
-	result, err := i.reservationRepository.Find(id)
+func (i *ReservationInteractor) GetReservation(ctx context.Context, id string) (entity.Reservation, error) {
+	result, err := i.reservationRepository.Find(ctx, id)
 	if err != nil {
 		return result, fmt.Errorf("failed to ReservationRepository.Find: %w", err)
 	}
 	return result, err
 }
 
-func (i *ReservationInteractor) AddReservation(customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
-	_, err := i.customerRepository.Find(customerId)
-	if err != nil {
-		return "", fmt.Errorf("failed to CustomerRepository.Find: %w", err)
-	}
-	beautician, err := i.beauticianRepository.Find(beauticianId)
-	if err != nil {
-		return "", fmt.Errorf("failed to BeauticianRepository.Find: %w", err)
-	}
-	menu, err := i.menuRepository.Find(menuId)
-	if err != nil {
-		return "", fmt.Errorf("failed to MenuRepository.Find: %w", err)
-	}
-
-	price := beautician.Price + menu.Price
-	endTime := startTime.Add(time.Duration(menu.Time) * time.Minute)
-
-	deplicateBeauticianReservation, err := i.reservationRepository.FindByBeauticianAndTime(beauticianId, startTime, endTime)
-	if err != nil {
-		return "", fmt.Errorf("failed to ReservationRepository.FindByBeauticianAndTime: %w", err)
-	}
-	if len(deplicateBeauticianReservation) != 0 {
-		return "", fmt.Errorf("failed to AddReservation validation(time deplicate): %w", errors.New("bad request"))
-	}
-
-	deplicateCustomerReservation, err := i.reservationRepository.FindByCustomerAndTime(customerId, startTime, endTime)
-	if err != nil {
-		return "", fmt.Errorf("failed to ReservationRepository.FindByCustomerAndTime: %w", err)
-	}
-	if len(deplicateCustomerReservation) != 0 {
-		return "", fmt.Errorf("failed to AddReservation validation(time deplicate): %w", errors.New("bad request"))
-	}
-
-	result, err := i.reservationRepository.Create(customerId, beauticianId, menuId, startTime, endTime, price)
+func (i *ReservationInteractor) AddReservation(ctx context.Context, customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
 	if err := validateReservationInput(customerId, beauticianId, menuId, startTime); err != nil {
 		return "", err
 	}
-	if err != nil {
-		return result, fmt.Errorf("failed to ReservationRepository.Create: %w", err)
-	}
-	return result, err
+	result, err := i.tx.DoInTx(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := i.customerRepository.Find(customerId)
+		if err != nil {
+			return "", fmt.Errorf("failed to CustomerRepository.Find: %w", err)
+		}
+		beautician, err := i.beauticianRepository.Find(beauticianId)
+		if err != nil {
+			return "", fmt.Errorf("failed to BeauticianRepository.Find: %w", err)
+		}
+		menu, err := i.menuRepository.Find(menuId)
+		if err != nil {
+			return "", fmt.Errorf("failed to MenuRepository.Find: %w", err)
+		}
+
+		price := beautician.Price + menu.Price
+		endTime := startTime.Add(time.Duration(menu.Time) * time.Minute)
+
+		duplicateBeauticianReservation, err := i.reservationRepository.FindByBeauticianAndTime(ctx, beauticianId, startTime, endTime)
+		if err != nil {
+			return "", fmt.Errorf("failed to ReservationRepository.FindByBeauticianAndTime: %w", err)
+		}
+		if len(duplicateBeauticianReservation) != 0 {
+			return "", fmt.Errorf("failed to AddReservation validation(time duplicate): %w", errors.New("bad request"))
+		}
+
+		duplicateCustomerReservation, err := i.reservationRepository.FindByCustomerAndTime(ctx, customerId, startTime, endTime)
+		if err != nil {
+			return "", fmt.Errorf("failed to ReservationRepository.FindByCustomerAndTime: %w", err)
+		}
+		if len(duplicateCustomerReservation) != 0 {
+			return "", fmt.Errorf("failed to AddReservation validation(time duplicate): %w", errors.New("bad request"))
+		}
+
+		result, err := i.reservationRepository.Create(ctx, customerId, beauticianId, menuId, startTime, endTime, price)
+
+		if err != nil {
+			return result, fmt.Errorf("failed to ReservationRepository.Create: %w", err)
+		}
+		return result, err
+	})
+
+	return result.(string), err
 }
 
-func (i *ReservationInteractor) DeleteReservation(id string) error {
-	err := i.reservationRepository.Delete(id)
+func (i *ReservationInteractor) DeleteReservation(ctx context.Context, id string) error {
+	err := i.reservationRepository.Delete(ctx, id)
 	if err != nil {
 		return fmt.Errorf("failed to ReservationRepository.Delete: %w", err)
 	}

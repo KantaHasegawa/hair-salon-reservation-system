@@ -1,6 +1,9 @@
 package entity
 
-import "time"
+import (
+	"golang.org/x/net/context"
+	"time"
+)
 
 type Reservation struct {
 	Id           string    `json:"id"`
@@ -13,8 +16,8 @@ type Reservation struct {
 }
 
 type ReservationInteractorInterface interface {
-	GetReservations() ([]Reservation, error)
-	GetReservation(id string) (Reservation, error)
-	AddReservation(customerId string, beauticianId string, menuId string, startTime time.Time) (string, error)
-	DeleteReservation(id string) error
+	GetReservations(ctx context.Context) ([]Reservation, error)
+	GetReservation(ctx context.Context, id string) (Reservation, error)
+	AddReservation(ctx context.Context, customerId string, beauticianId string, menuId string, startTime time.Time) (string, error)
+	DeleteReservation(ctx context.Context, id string) error
 }

@@ -30,7 +30,7 @@ func InitializeMenuController(db *gorm.DB) *controller.MenuController {
 }
 
 func InitializeReservationController(db *gorm.DB) *controller.ReservationController {
-	wire.Build(controller.NewReservationController, usecase.NewReservationInteractor, repository.NewReservationRepository, repository.NewMenuRepository, repository.NewBeauticianRepository, repository.NewCustomerRepository,
+	wire.Build(database.NewTransaction, controller.NewReservationController, usecase.NewReservationInteractor, repository.NewReservationRepository, repository.NewMenuRepository, repository.NewBeauticianRepository, repository.NewCustomerRepository,
 		wire.Bind(new(usecase.ReservationRepositoryInterface), new(*repository.ReservationRepository)),
 		wire.Bind(new(usecase.MenuRepositoryInterface), new(*repository.MenuRepository)),
 		wire.Bind(new(usecase.BeauticianRepositoryInterface), new(*repository.BeauticianRepository)),

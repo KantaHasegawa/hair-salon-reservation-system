@@ -31,11 +31,12 @@ func InitializeMenuController(db *gorm.DB) *controller.MenuController {
 }
 
 func InitializeReservationController(db *gorm.DB) *controller.ReservationController {
+	transaction := database.NewTransaction(db)
 	reservationRepository := repository.NewReservationRepository(db)
 	beauticianRepository := repository.NewBeauticianRepository(db)
 	menuRepository := repository.NewMenuRepository(db)
 	customerRepository := repository.NewCustomerRepository(db)
-	reservationInteractor := usecase.NewReservationInteractor(reservationRepository, beauticianRepository, menuRepository, customerRepository)
+	reservationInteractor := usecase.NewReservationInteractor(transaction, reservationRepository, beauticianRepository, menuRepository, customerRepository)
 	reservationController := controller.NewReservationController(reservationInteractor)
 	return reservationController
 }

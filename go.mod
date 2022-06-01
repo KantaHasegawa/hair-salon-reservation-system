@@ -9,6 +9,7 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/stretchr/testify v1.7.0
+	golang.org/x/net v0.0.0-20211013171255-e13a2654a71e
 )
 
 require (
