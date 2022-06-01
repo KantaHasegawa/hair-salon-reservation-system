@@ -56,9 +56,6 @@ func (i *ReservationInteractor) GetReservation(ctx context.Context, id string) (
 }
 
 func (i *ReservationInteractor) AddReservation(ctx context.Context, customerId string, beauticianId string, menuId string, startTime time.Time) (string, error) {
-	if err := validateReservationInput(customerId, beauticianId, menuId, startTime); err != nil {
-		return "", err
-	}
 	result, err := i.tx.DoInTx(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := i.customerRepository.Find(customerId)
 		if err != nil {
@@ -113,8 +110,4 @@ func (i *ReservationInteractor) DeleteReservation(ctx context.Context, id string
 		return fmt.Errorf("failed to ReservationRepository.Delete: %w", err)
 	}
 	return err
-}
-
-func validateReservationInput(customerId string, beauticianId string, menuId string, startTime time.Time) error {
-	return nil
 }
